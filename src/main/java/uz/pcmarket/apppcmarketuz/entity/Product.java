@@ -27,14 +27,11 @@ public class Product {
     @OneToOne
     private Attachment attachment;
 
-    @ManyToOne
-    private BasketProduct basketProduct;
 
-    public Product(String name, double price, Category category, Attachment attachment, BasketProduct basketProduct) {
+    public Product(String name, double price, Category category, Attachment attachment) {
         this.name = name;
         this.price = price;
         this.category = category;
         this.attachment = attachment;
-        this.basketProduct=basketProduct;
     }
 }

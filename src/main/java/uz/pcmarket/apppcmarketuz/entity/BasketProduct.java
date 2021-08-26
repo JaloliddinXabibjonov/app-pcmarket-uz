@@ -22,6 +22,9 @@ public class BasketProduct {
 
     private double subtotal;
 
+    @OneToMany
+    private List<Product> productList;
+
     @ManyToOne
     private Basket basket;
 }
