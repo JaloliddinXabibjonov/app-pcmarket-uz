@@ -29,4 +29,7 @@ public class Checkout {
     private String email;
 
     private String orderNote;
+
+    @OneToOne
+    private Basket basket;
 }

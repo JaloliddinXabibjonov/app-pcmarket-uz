@@ -2,6 +2,7 @@ package uz.pcmarket.apppcmarketuz.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import uz.pcmarket.apppcmarketuz.payload.template.Result;
 import uz.pcmarket.apppcmarketuz.service.ProductService;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/api/product")
@@ -48,6 +50,12 @@ public class ProductController {
     public ResponseEntity<Product> getById(@PathVariable Integer id){
         Product product = productService.getProductById(id);
         return ResponseEntity.ok(product);
+    }
+
+    @GetMapping("/{propertyList}")
+    public HttpEntity<?> getProductByProperties(@RequestBody List<Integer> propertyList){
+        Page<Product> products = productService.getProductByPropertyIdes(propertyList);
+        return ResponseEntity.ok(products);
     }
 
     /**

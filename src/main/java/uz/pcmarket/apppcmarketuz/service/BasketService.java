@@ -21,8 +21,6 @@ public class BasketService {
     @Autowired
     BasketRepository basketRepository;
     @Autowired
-    CheckoutRepository checkoutRepository;
-    @Autowired
     UserRepository userRepository;
 
     /**
@@ -31,13 +29,11 @@ public class BasketService {
      * @return Result
      */
     public Result addBasket(BasketDto basketDto){
-        Optional<Checkout> optionalCheckout = checkoutRepository.findById(basketDto.getCheckoutId());
-        if (!optionalCheckout.isPresent())
-            return new Result("Checkout not found", false);
+
         Optional<User> optionalUser = userRepository.findById(basketDto.getUserId());
         if (!optionalUser.isPresent())
             return new Result("User not found", false);
-        Basket basket=new Basket(optionalCheckout.get(), optionalUser.get());
+        Basket basket=new Basket(optionalUser.get());
         basketRepository.save(basket);
         return new Result("Basket successfully added", true);
     }
@@ -74,13 +70,9 @@ public class BasketService {
         if (!optionalBasket.isPresent())
             return new Result("Basket not found", false);
         Basket basket = optionalBasket.get();
-        Optional<Checkout> optionalCheckout = checkoutRepository.findById(basketDto.getCheckoutId());
-        if (!optionalCheckout.isPresent())
-            return new Result("Checkout not found", false);
         Optional<User> optionalUser = userRepository.findById(basketDto.getUserId());
         if (!optionalUser.isPresent())
             return new Result("User not found", false);
-        basket.setCheckout(optionalCheckout.get());
         basket.setUser(optionalUser.get());
         basketRepository.save(basket);
         return new Result("Basket successfully edited", true);

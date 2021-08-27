@@ -17,14 +17,11 @@ public class ProductDto {
     @NotNull(message = "The product photo should not be empty")
     private Integer photoId;
 
-    @NotNull(message = "The basket product should not be empty")
-    private Integer basketProductId;
-
-    public ProductDto(String name, double price, Integer categoryId, Integer photoId, Integer basketProductId) {
+    public ProductDto(String name, double price, Integer categoryId, Integer photoId) {
         this.name = name;
         this.price = price;
         this.categoryId = categoryId;
         this.photoId = photoId;
-        this.basketProductId=basketProductId;
+
     }
 }

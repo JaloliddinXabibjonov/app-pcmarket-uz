@@ -35,11 +35,12 @@ public class BasketProductService {
     public Result add(BasketProductDto basketProductDto){
         BasketProduct basketProduct=new BasketProduct();
         basketProduct.setAmount(basketProductDto.getAmount());
-        List<Product> productList = productRepository.findAllById(basketProductDto.getProductSet());
-        basketProduct.setProductList(productList);
-        for (Product product : productList) {
-            basketProduct.setSubtotal(basketProductDto.getAmount()*product.getPrice());
+        Optional<Product> optionalProduct = productRepository.findById(basketProductDto.getProductId());
+        //CHECK PRODUCT BY ID
+        if (!optionalProduct.isPresent()){
+            return new Result("Product not found", false);
         }
+        basketProduct.setSubtotal(basketProduct.getAmount()*optionalProduct.get().getPrice());
         //CHECK BASKET BY ID
         Optional<Basket> optionalBasket = basketRepository.findById(basketProductDto.getBasketId());
         if (!optionalBasket.isPresent())
@@ -77,18 +78,23 @@ public class BasketProductService {
      * @return Result
      */
     public Result edit(Integer id, BasketProductDto basketProductDto){
+
         //CHECK BASKET PRODUCT  BY ID
         Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(id);
         if (!optionalBasketProduct.isPresent())
             return new Result("Basket product not found", false);
+
         BasketProduct basketProduct = optionalBasketProduct.get();
         basketProduct.setAmount(basketProductDto.getAmount());
-        List<Product> productList = productRepository.findAllById(basketProductDto.getProductSet());
-        basketProduct.setProductList(productList);
-        for (Product product : productList) {
-            basketProduct.setSubtotal(basketProductDto.getAmount()*product.getPrice());
+
+        //CHECK PRODUCT BY ID
+        Optional<Product> optionalProduct = productRepository.findById(basketProductDto.getProductId());
+        if (!optionalProduct.isPresent()){
+            return new Result("Product not found", false);
         }
+
         //CHECK BASKET BY ID
+        basketProduct.setSubtotal(basketProduct.getAmount()*optionalProduct.get().getPrice());
         Optional<Basket> optionalBasket = basketRepository.findById(basketProductDto.getBasketId());
         if (!optionalBasket.isPresent())
             return new Result("Basket not found", false);

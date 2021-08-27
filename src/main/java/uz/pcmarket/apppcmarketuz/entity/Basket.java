@@ -17,13 +17,9 @@ public class Basket {
     private Integer id;
 
     @OneToOne
-    private Checkout checkout;
-
-    @OneToOne
     private User user;
 
-    public Basket(Checkout checkout, User user) {
-        this.checkout = checkout;
-        this.user = user;
+    public Basket(User user) {
+       this.user = user;
     }
 }

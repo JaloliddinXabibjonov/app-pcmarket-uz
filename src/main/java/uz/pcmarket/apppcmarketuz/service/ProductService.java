@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
 import uz.pcmarket.apppcmarketuz.entity.Attachment;
 import uz.pcmarket.apppcmarketuz.entity.BasketProduct;
 import uz.pcmarket.apppcmarketuz.entity.Category;
@@ -16,6 +17,7 @@ import uz.pcmarket.apppcmarketuz.repository.BasketProductRepository;
 import uz.pcmarket.apppcmarketuz.repository.CategoryRepository;
 import uz.pcmarket.apppcmarketuz.repository.ProductRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -43,10 +45,7 @@ public class ProductService {
         Optional<Category> optionalCategory = categoryRepository.findById(productDto.getCategoryId());
         if (!optionalCategory.isPresent())
             return new Result("Category not found", false);
-        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(productDto.getBasketProductId());
-        if (!optionalBasketProduct.isPresent())
-            return new Result("BasketProduct not found", false);
-        Product product=new Product(productDto.getName(), productDto.getPrice(), optionalCategory.get(), optionalAttachment.get(), optionalBasketProduct.get());
+        Product product=new Product(productDto.getName(), productDto.getPrice(), optionalCategory.get(), optionalAttachment.get());
         productRepository.save(product);
         return new Result("Product saved", true);
     }
@@ -72,6 +71,13 @@ public class ProductService {
         return null;
     }
 
+
+    public Page<Product> getProductByPropertyIdes( List<Integer> propertyList){
+        Pageable pageable=  PageRequest.of(0,15);
+        Page<Product> products = productRepository.findAllByPropertyIdes(propertyList,pageable);
+        return products;
+    }
+
     /**
      * EDIT PRODUCT
      * @param id
@@ -88,15 +94,11 @@ public class ProductService {
         Optional<Category> optionalCategory = categoryRepository.findById(productDto.getCategoryId());
         if (!optionalCategory.isPresent())
             return new Result("Category not found", false);
-        Optional<BasketProduct> optionalBasketProduct = basketProductRepository.findById(productDto.getBasketProductId());
-        if (!optionalBasketProduct.isPresent())
-            return new Result("BasketProduct not found", false);
         Product product = optionalProduct.get();
         product.setName(productDto.getName());
         product.setPrice(productDto.getPrice());
         product.setAttachment(optionalAttachment.get());
         product.setCategory(optionalCategory.get());
-        product.setBasketProduct(optionalBasketProduct.get());
         productRepository.save(product);
         return new Result("Product edited", true);
     }
